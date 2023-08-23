@@ -57,8 +57,8 @@ func main() {
 
 	// define handlers
 	e.GET("/", h1)
-	e.GET("/add-film/", h2)
-	e.GET("/halpine/", halpine)
+	e.POST("/add-film/", h2)
+	e.GET("/halpine", halpine)
 
 	e.Logger.Fatal(e.Start(":1323"))
 
