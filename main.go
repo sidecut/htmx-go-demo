@@ -3,9 +3,10 @@ package main
 import (
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 	"time"
+
+	"github.com/labstack/echo/v4"
 )
 
 type Film struct {
@@ -16,8 +17,17 @@ type Film struct {
 func main() {
 	fmt.Println("Go app...")
 
+	// use echo server
+	e := echo.New()
+	e.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Hello, World!")
+	})
+	e.GET("/echo/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Echo, World!")
+	})
+
 	// handler function #1 - returns the index.html template, with film data
-	h1 := func(w http.ResponseWriter, r *http.Request) {
+	h1 := func(c echo.Context) error {
 		tmpl := template.Must(template.ParseFiles("index.html"))
 		films := map[string][]Film{
 			"Films": {
@@ -26,30 +36,34 @@ func main() {
 				{Title: "The Thing", Director: "John Carpenter"},
 			},
 		}
-		tmpl.Execute(w, films)
+		return tmpl.Execute(c.Response().Writer, films)
 	}
 
 	// handler function #2 - returns the template block with the newly added film, as an HTMX response
-	h2 := func(w http.ResponseWriter, r *http.Request) {
+	h2 := func(c echo.Context) error {
 		time.Sleep(1 * time.Second)
-		title := r.PostFormValue("title")
-		director := r.PostFormValue("director")
+		title := c.Request().PostFormValue("title")
+		director := c.Request().PostFormValue("director")
 		// htmlStr := fmt.Sprintf("<li class='list-group-item bg-primary text-white'>%s - %s</li>", title, director)
 		// tmpl, _ := template.New("t").Parse(htmlStr)
 		tmpl := template.Must(template.ParseFiles("index.html"))
-		tmpl.ExecuteTemplate(w, "film-list-element", Film{Title: title, Director: director})
+		return tmpl.ExecuteTemplate(c.Response().Writer, "film-list-element", Film{Title: title, Director: director})
 	}
 
-	halpine := func(w http.ResponseWriter, r *http.Request) {
+	halpine := func(c echo.Context) error {
 		tmpl := template.Must(template.ParseFiles("halpine.html"))
-		tmpl.Execute(w, nil)
+		return tmpl.Execute(c.Response().Writer, nil)
 	}
+
+	println(h1, h2, halpine)
 
 	// define handlers
-	http.HandleFunc("/", h1)
-	http.HandleFunc("/add-film/", h2)
-	http.HandleFunc("/halpine/", halpine)
+	// http.HandleFunc("/", h1)
+	// http.HandleFunc("/add-film/", h2)
+	// http.HandleFunc("/halpine/", halpine)
 
-	log.Fatal(http.ListenAndServe(":8000", nil))
+	// log.Fatal(http.ListenAndServe(":8000", nil))
+
+	e.Logger.Fatal(e.Start(":1323"))
 
 }
