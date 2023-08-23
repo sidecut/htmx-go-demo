@@ -55,14 +55,10 @@ func main() {
 		return tmpl.Execute(c.Response().Writer, nil)
 	}
 
-	println(h1, h2, halpine)
-
 	// define handlers
-	// http.HandleFunc("/", h1)
-	// http.HandleFunc("/add-film/", h2)
-	// http.HandleFunc("/halpine/", halpine)
-
-	// log.Fatal(http.ListenAndServe(":8000", nil))
+	e.GET("/", h1)
+	e.GET("/add-film/", h2)
+	e.GET("/halpine/", halpine)
 
 	e.Logger.Fatal(e.Start(":1323"))
 
