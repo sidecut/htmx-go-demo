@@ -20,10 +20,10 @@ func main() {
 	// use echo server
 	e := echo.New()
 	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
+		return c.HTML(http.StatusOK, "Hello, World!")
 	})
 	e.GET("/echo/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Echo, World!")
+		return c.HTML(http.StatusOK, "Echo, World!")
 	})
 
 	// handler function #1 - returns the index.html template, with film data
