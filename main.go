@@ -40,9 +40,15 @@ func main() {
 		tmpl.ExecuteTemplate(w, "film-list-element", Film{Title: title, Director: director})
 	}
 
+	halpine := func(w http.ResponseWriter, r *http.Request) {
+		tmpl := template.Must(template.ParseFiles("halpine.html"))
+		tmpl.Execute(w, nil)
+	}
+
 	// define handlers
 	http.HandleFunc("/", h1)
 	http.HandleFunc("/add-film/", h2)
+	http.HandleFunc("/halpine/", halpine)
 
 	log.Fatal(http.ListenAndServe(":8000", nil))
 
