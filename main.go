@@ -51,18 +51,8 @@ func main() {
 
 		slog.Info("add-film", "film", film)
 
-		// htmlStr := fmt.Sprintf("<li class='list-group-item bg-primary text-white'>%s - %s</li>", title, director)
-		// tmpl, _ := template.New("t").Parse(htmlStr)
 		tmpl := template.Must(template.ParseFiles("index.html"))
-		// c.Render(http.StatusOK, func(w http.ResponseWriter) error {
 		tmpl.ExecuteTemplate(c.Writer, "film-list-element", film)
-		// })
-		// 	c.Render(http.StatusOK, func(w http.ResponseWriter) error {
-		// 		return tmpl.Execute(w, film)
-		// return tmpl.ExecuteTemplate(w, "film-list-element", film)
-		// 	})
-
-		c.Render(http.StatusOK, func(w http.ResponseWriter) error {})
 	}
 
 	halpine := func(c *gin.Context) {
