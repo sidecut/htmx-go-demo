@@ -52,6 +52,8 @@ func main() {
 		slog.Info("add-film", "film", film)
 
 		tmpl := template.Must(template.ParseFiles("index.html"))
+		c.Header("Content-Type", gin.MIMEHTML)
+		c.Status(http.StatusOK)
 		tmpl.ExecuteTemplate(c.Writer, "film-list-element", film)
 	}
 
