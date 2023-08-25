@@ -15,6 +15,12 @@ type Film struct {
 	Director string `form:"director" json:"director" binding:"required"`
 }
 
+var films = []Film{
+	{Title: "The Godfather", Director: "Francis Ford Coppola"},
+	{Title: "Blade Runner", Director: "Ridley Scott"},
+	{Title: "The Thing", Director: "John Carpenter"},
+}
+
 func main() {
 	fmt.Println("Go app...")
 
@@ -29,11 +35,6 @@ func main() {
 	// handler function #1 - returns the index.html template, with film data
 	h1 := func(c *gin.Context) {
 		tmpl := template.Must(template.ParseFiles("index.html"))
-		films := []Film{
-			{Title: "The Godfather", Director: "Francis Ford Coppola"},
-			{Title: "Blade Runner", Director: "Ridley Scott"},
-			{Title: "The Thing", Director: "John Carpenter"},
-		}
 		tmpl.Execute(c.Writer, films)
 	}
 
@@ -48,6 +49,7 @@ func main() {
 		}
 
 		slog.Info("add-film", "film", film)
+		films = append(films, film)
 
 		tmpl := template.Must(template.ParseFiles("index.html"))
 		c.Header("Content-Type", gin.MIMEHTML)
